@@ -13,10 +13,9 @@ void ask_a_num (long double &a, const std::string &prompt_to_ask)
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         } else {std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); break;}  
     }}
-   
 
 bool validate_op(char a){
-    return (a=='+'|| a=='-'|| a=='*'|| a=='/'|| a=='%');}
+    return (a=='+'|| a=='-'|| a=='*'|| a=='/'|| a=='%'|| a=='^');}
 
 bool validate_Type(char a){
     return (a=='A'|| a=='a'|| a=='B'|| a=='b');}
@@ -36,8 +35,8 @@ int main (){
         char choice{};
 
     do{
-    char op, type;
-    long double num1, num2, res;
+    char op{}, type{};
+    long double num1{}, num2{}, res{};
         //----------Type of Calculator----------
        input(type, 
             "Please Choose the type of Calculator (A or B): ",
@@ -46,20 +45,28 @@ int main (){
             
         //----------Choose the Opperator----------
        input(op, 
-            "Enter the opperation to be done (Enter only +,-,*,/,%): ", 
+            "Enter the opperation to be done (Enter only +,-,*,/,%,^): ", 
                 "The Entered Opperation is Invalid! \n Try again! \n \n", 
                     validate_op ) ;
     
         ask_a_num(num1, "Enter the first number: " );
         ask_a_num(num2, "Enter the Second number: " );
 
-        bool cal_successful = 1;
+        bool cal_successful {1};
         //----------Calculations----------
         switch (op)
-        {
-            case '+': res = num1 + num2 ; break;
+        {   case '+': res = num1 + num2 ; break;
             case '-': res = num1 - num2 ; break;
             case '*': res = num1 * num2 ; break;
+            case '^': 
+                if (num1<0 && num2!=std::floor(num2))
+                {   std::cout << "Error: root of a negitive number is undefined in real numbers!\n";
+                    cal_successful = 0;}
+                else if (num1==0 && num2<0)
+                {   std::cout << "Error: 0 raised to a negative power is undefined (division by zero)!\n";
+                    cal_successful = 0 ; }
+                else {res = std::pow (num1,num2) ; } 
+            break;
             case '/':
                 if (num2 == 0)
                 {   std::cout << "Error: Division by zero is undefined!\n" ;
@@ -82,7 +89,9 @@ int main (){
                  case '-': std::cout << "The difference of the Numbers " << num1 << " and " << num2 << " is " << res << '\n'; break;
                  case '*': std::cout << "The product of the Numbers " << num1 << " and " << num2 << " is " << res << '\n'; break;
                  case '/': std::cout << "The quotient of the Numbers " << num1 << " and " << num2 << " is " << res << '\n'; break;
-                 case '%': std::cout << "The Modulo/Remainder of the Numbers " << num1 << " and " << num2 << " is " << res << '\n'; break;  
+                 case '%': std::cout << "The Modulo/Remainder of the Numbers " << num1 << " and " << num2 << " is " << res << '\n'; break;
+                 case '^': std::cout << num1 << " Raised to the power of "<<num2<<" is "<< res<<'\n'; break;
+                 default : std::cout << "Appreciate your enthusiasm! We're currently working on on this opperator.\n"; break;
                 }                               //----------Type B Calculator's Output----------
             } else if(type =='B'||type =='b') 
             {   if (op == '%') {std::cout<< num1 << " " << "mod" << " " << num2 << " = " << res << '\n' ; } 
@@ -90,7 +99,7 @@ int main (){
         }   }
     std::cout << "\nDo you want to perform another calculation? (y/n): ";
         std::cin >> choice;    
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');        
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); std::cout<<".\n.\n.\n";        
         } while (choice == 'y' || choice == 'Y');
         std::cout << "Exiting calculator. Goodbye!\n";     
     std::cout << "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n" ;
