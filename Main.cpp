@@ -23,17 +23,14 @@ void ask2num (long double &a,long double &b)
 }
 
 bool validate_op(char &a){
-    return (a=='+'|| a=='-'|| a=='*'|| a=='/'|| a=='%');
-}
+    return (a=='+'|| a=='-'|| a=='*'|| a=='/'|| a=='%');}
 
 bool validate_Type(char &a){
-    return (a=='A'|| a=='a'|| a=='B'|| a=='b');
-}
+    return (a=='A'|| a=='a'|| a=='B'|| a=='b');}
 
 int main (){
 
-    char op ;
-    char type;
+    char op, type;
     long double num1, num2, res;
 
     std::cout << "-------------------------------------- CALCULATOR -------------------------------------- \n" ;
@@ -42,23 +39,21 @@ int main (){
        do
         {   std::cout << "Please Choose the type of Calculator (A or B): ";
             std::cin >> type;
+                if (!validate_Type (type)|| std::cin.peek() != '\n')
+                {    std::cout << "The Entered type of Calculator is Invalid! \n Try again! \n \n";
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                if (!validate_Type (type))
-                {
-                    std::cout << "The Entered type of Calculator is Invalid! \n Try again! \n \n";
-                }
-        }while(!validate_Type (type));
+                } else {break;}
+        }while(true);
             
         //----------Choose the Opperator----------
         do
         {   std::cout << "Enter the opperation to be done (Enter only +,-,*,/,%): "  ;
             std::cin >> op ;
+                if (!validate_op (op)|| std::cin.peek() != '\n')
+                {   std::cout << "The Entered Opperation is Invalid! \n Try again! \n \n";
                     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                if (!validate_op (op))
-                {
-                   std::cout << "The Entered Opperation is Invalid! \n Try again! \n \n";
-                }
-        } while (!validate_op(op));
+                } else {break;}
+        } while (true) ;
     
         ask2num(num1,num2);
 
