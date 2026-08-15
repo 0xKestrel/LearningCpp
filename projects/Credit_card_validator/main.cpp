@@ -1,9 +1,12 @@
 #include<iostream>
 #include <string>
 
-bool in_num_val (std::string &num) {
+bool in_num_val (std::string& num) {
     
-   return num.length()>=13 && num.length()<=19;}
+   if (num.length()<13 || num.length()>19)
+   {return 0;}
+    
+}
 
 void in_num (std::string &num){
     do
