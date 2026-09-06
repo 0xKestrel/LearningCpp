@@ -12,16 +12,13 @@ void ask_choice (int& a){
 }
 
 void input_n_output (int& a, int & b, int& d , std::string*& t, std::string*& c){
-    switch (a)
-        {
+    switch (a){
         case 1:
-            if (b>=d)
-            {
+            if (b>=d){
                 d*=2;
                 std::string* newT = new std::string[d];
                 std::string* newC = new std::string[d];
-                for (size_t i = 0; i < b; ++i)
-                    {
+                for (size_t i = 0; i < b; ++i){
                         newT[i]=t[i];
                         newC[i]=c[i];
                     }
@@ -43,8 +40,7 @@ void input_n_output (int& a, int & b, int& d , std::string*& t, std::string*& c)
             break;
         case 2:
             std::cout<<"\n ---Yours Notes ---\n";
-            if (b == 0)
-            {
+            if (b == 0){
                 std::cout << "No notes saved yet.\n";
             } else{
                 for(int i {0}; i < b;++i){
@@ -53,10 +49,25 @@ void input_n_output (int& a, int & b, int& d , std::string*& t, std::string*& c)
             }
             std::cout << '\n';
             break;
-        case 3:
+        case 3:{
             std::cin.ignore();
-            std::cout<<"\n ---Feature Upcoming---\n\n";
+            std::string keyword;
+            std::cout << "\nEnter keyword to search: ";
+            std::getline(std::cin, keyword);
+    
+            bool found = false;
+            std::cout << "\n--- Search Results ---\n";
+                for (size_t i = 0; i < b; ++i){
+                    if (t[i].find(keyword) != std::string::npos || c[i].find(keyword) != std::string::npos){
+                        std::cout << "[" << i + 1 << "] " << t[i] << "\n" << "    " << c[i] << "\n\n";
+                        found = true;
+                    }
+                }
+                if (!found){
+                    std::cout << "No matching notes found for \"" << keyword << "\".\n\n";
+                }
             break;
+        }
         case 4:
             std::cin.ignore();
             std::cout << "\nExiting MarkCLI. Goodbye!\n\n";
