@@ -11,10 +11,28 @@ void ask_choice (int& a){
     std::cin>> a;
 }
 
-void input_n_output (int& a, int & b, std::string t[], std::string c[]){
+void input_n_output (int& a, int & b, int& d , std::string*& t, std::string*& c){
     switch (a)
         {
         case 1:
+            if (b>=d)
+            {
+                d*=2;
+                std::string* newT = new std::string[d];
+                std::string* newC = new std::string[d];
+                for (size_t i = 0; i < b; ++i)
+                    {
+                        newT[i]=t[i];
+                        newC[i]=c[i];
+                    }
+                delete[] t;
+                delete[] c;
+
+                t = newT;
+                c = newC;        
+                        
+            }
+                        
             std::cin.ignore();
             std::cout<<"\n----------------------------------------------------------------\n\nEnter note title: ";
             std::getline(std::cin, t[b]);
@@ -60,7 +78,7 @@ int main(){
     do
     {
         ask_choice(choice);
-        input_n_output(choice,count,titles,contents);
+        input_n_output(choice, count, capacity, titles, contents);
 
     } while (choice!=4);
     delete[] titles;
