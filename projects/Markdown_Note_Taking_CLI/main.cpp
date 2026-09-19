@@ -1,5 +1,5 @@
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <string>
 #include <fstream>
 #include <limits>
 
@@ -8,7 +8,7 @@ struct Note {
     std::string content;
 };
 
-enum MenuChoice { CREATE = 1, LIST, SEARCH, DELETE, VIEW, EXIT };
+enum MenuChoice { CREATE = 1, LIST, SEARCH, DELETE, EXIT };
 
 int get_valid_int(int min_val, int max_val) {
     int value{};
@@ -28,17 +28,15 @@ void ask_choice(int& choice) {
               << "2. List all Notes\n"
               << "3. Search Notes\n"
               << "4. Delete a Note\n"
-              << "5. View Full Note\n"
-              << "6. Exit\n"
+              << "5. Exit\n"
               << "Select an Option: ";
     choice = get_valid_int(CREATE, EXIT);
 }
 
-
-void resize_arrays(int& count, int& capacity, Note*& notes) {
+void resize_notes(int& count, int& capacity, Note*& notes) {
     if (count >= capacity) {
         capacity *= 2;
-        Note* new_notes=new Note[capacity];
+        Note* new_notes = new Note[capacity];
         for (int i = 0; i < count; ++i) {
             new_notes[i] = notes[i];
         }
@@ -52,7 +50,7 @@ void load_notes(int& count, int& capacity, Note*& notes) {
     if (inFile.is_open()) {
         std::string line;
         while (std::getline(inFile, line)) {
-            resize_arrays(count, capacity, notes); 
+            resize_notes(count, capacity, notes);
             notes[count].title = line;
             if (std::getline(inFile, line)) {
                 notes[count].content = line;
@@ -66,21 +64,32 @@ void load_notes(int& count, int& capacity, Note*& notes) {
     }
 }
 
-void save_notes(int& count, Note*& notes){    
-         std::ofstream outFile("notes.txt");
-            if (outFile.is_open()) {
-                for (int i = 0; i < count; ++i) {
-                    outFile << notes[i].title << "\n" << notes[i].content << "\n";
-                }
-                outFile.close();
-            }
+void save_notes(int count, const Note* notes) {
+    std::ofstream outFile("notes.txt");
+    if (outFile.is_open()) {
+        for (int i = 0; i < count; ++i) {
+            outFile << notes[i].title << "\n" << notes[i].content << "\n";
+        }
+        outFile.close();
+    }
 }
 
-void input_n_output(int& choice, int& count, int& capacity,  Note*& notes) {
+void print_title(const Note* notes, int i) {
+    std::cout << i + 1 << ". " << notes[i].title << '\n';
+}
+
+void print_note(const Note* notes, int i) {
+    std::cout << "--------------------------------------------------------------------\n"
+               << "                             [Note: " << i + 1 << ".]\n"
+               << "Title: " << notes[i].title << "\nContent: " << notes[i].content
+               << "\n--------------------------------------------------------------------\n";
+}
+
+void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
     switch (choice) {
         case CREATE: {
-            resize_arrays(count, capacity, notes); 
-                
+            resize_notes(count, capacity, notes);
+
             std::cin.ignore();
             std::cout << "\n----------------------------------------------------------------\n\nEnter note title: ";
             std::getline(std::cin, notes[count].title);
@@ -89,16 +98,24 @@ void input_n_output(int& choice, int& count, int& capacity,  Note*& notes) {
             count++;
             std::cout << "Note saved successfully!\n\n----------------------------------------------------------------\n\n";
             save_notes(count, notes);
-            
             break;
         }
         case LIST: {
-            std::cout << "\n---Your Notes---\n";
             if (count == 0) {
-                std::cout << "No notes saved yet.\n";
+                std::cout << "\nNo notes saved yet.\n\n";
+                break;
+            }
+            std::cout << "Choose the type of List you want:\n1. Titles only\n2. Both the Title and the Content\n";
+            int list_choice{ get_valid_int(1, 2) };
+
+            std::cout << "\n---Your Notes---\n";
+            if (list_choice == 1) {
+                for (int i = 0; i < count; ++i) {
+                    print_title(notes, i);
+                }
             } else {
-                for (int i{0}; i < count; ++i) {
-                    std::cout << i + 1 << ". " << notes[i].title << '\n';
+                for (int i = 0; i < count; ++i) {
+                    print_note(notes, i);
                 }
             }
             std::cout << '\n';
@@ -109,11 +126,12 @@ void input_n_output(int& choice, int& count, int& capacity,  Note*& notes) {
             std::string keyword;
             std::cout << "\nEnter keyword to search: ";
             std::getline(std::cin, keyword);
-    
+
             bool found = false;
             std::cout << "\n--- Search Results ---\n";
             for (int i = 0; i < count; ++i) {
-                if (notes[i].title.find(keyword) != std::string::npos || notes[i].content.find(keyword) != std::string::npos) {
+                if (notes[i].title.find(keyword) != std::string::npos ||
+                    notes[i].content.find(keyword) != std::string::npos) {
                     std::cout << "[" << i + 1 << "] " << notes[i].title << "\n    " << notes[i].content << "\n\n";
                     found = true;
                 }
@@ -124,11 +142,7 @@ void input_n_output(int& choice, int& count, int& capacity,  Note*& notes) {
             break;
         }
         case DELETE: {
-            std::cout << "\n[Delete a Note — coming soon]\n\n";
-            break;
-        }
-        case VIEW: {
-            std::cout << "\n[View Full Note — coming soon]\n\n";
+            std::cout << "\n[Delete a Note - coming soon]\n\n";
             break;
         }
         case EXIT: {
@@ -146,7 +160,6 @@ int main() {
     int count{};
     Note* notes = new Note[capacity];
 
-
     load_notes(count, capacity, notes);
 
     do {
@@ -155,11 +168,9 @@ int main() {
     } while (choice != EXIT);
 
     std::cin.clear();
-    std::cin.ignore(32767, '\n');
-
     std::cout << "\nPress Enter to exit...";
     std::cin.get();
-    
+
     delete[] notes;
     return 0;
 }
