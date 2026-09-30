@@ -159,7 +159,32 @@ void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
             break;
         }
         case DELETE: {
-            std::cout << "\n[Delete a Note - coming soon]\n\n";
+             if (count == 0) {
+                std::cout << "\nNo notes saved yet.\n\n";
+                break;
+              }
+              std::cout << "\n---All Your Notes Titles---\n";
+                    for (int i = 0; i < count; ++i) {
+                        print_title(notes, i);
+                    }
+                    char delete_confirm {};
+                    std::cout << "\nEnter the Serial Number of the note to DELETE: ";
+                    int note_number {get_valid_int(1, count)};
+                    std::cout<<"\nAre you Sure u want to DELETE the note: \n";
+                    print_note(notes, note_number-1);
+                    std::cout<<"\n Yes [y]   No [n]  : ";
+                    std::cin>>delete_confirm;
+                    if (delete_confirm=='y'||delete_confirm=='Y')
+                    {
+                        for (int i = (note_number-1) ; i < (count-1); i++)
+                        { notes[i]=notes[(i+1)]; }
+                        count--;
+                        save_notes(count, notes);    
+                        std::cout<<"Note Deleted Successfully!\n";
+                    }else{
+                        std::cout<<"\n Note not deleted!\n";
+                    }
+                    
             break;
         }
         case EXIT: {

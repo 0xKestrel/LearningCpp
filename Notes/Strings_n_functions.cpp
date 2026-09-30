@@ -61,7 +61,9 @@ void demoIterators() {
 
     // Dereferencing valid iterators
     std::cout << "*str.begin()    : '" << *str.begin() << "' (Points to first char)\n"
-              << "*str.rbegin()   : '" << *str.rbegin() << "' (Points to last char)\n";
+              << "*str.rbegin()   : '" << *str.rbegin() << "' (Points to last char)\n"
+              << "*(str.end()-1)    : '" << *(str.end()-1) << "' (Points to last char)\n"
+              << "*(str.rbegin()-1)   : '" << *(str.rend()-1) << "' (Points to first char)\n";
 
     /*
      * NOTE ON end() AND rend():
