@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 #include <limits>
+#include <algorithm>
+#include <cctype>
 
 struct Note {
     std::string title;
@@ -85,6 +87,16 @@ void print_note(const Note* notes, int i) {
                << "\n--------------------------------------------------------------------\n";
 }
 
+std::string to_lower(const std::string &input){
+        std::string output {} ; 
+        for (int i = 0; i < input.size() ; i++)
+        {
+            output.push_back(std::tolower(input[i]));
+        }
+        return output;
+        
+    }
+
 void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
     switch (choice) {
         case CREATE: {
@@ -122,19 +134,23 @@ void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
             break;
         }
         case SEARCH: {
+            if (count == 0) {
+                std::cout << "\nNo notes saved yet.\n\n";
+                break;
+            }
             std::string keyword;
             std::cout << "Choose the type of Search you want:\n1. Using Keywords\n2. Using S.No of the note\n";
             int list_choice{ get_valid_int(1, 2) };
             if (list_choice==1){
                 std::cout << "\nEnter keyword to search: ";
-                std::cin.ignore();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::getline(std::cin, keyword);
+                keyword = to_lower(keyword);
 
                 bool found = false;
                 std::cout << "\n--- Search Results ---\n";
                 for (int i = 0; i < count; ++i) {
-                    if (notes[i].title.find(keyword) != std::string::npos ||
-                        notes[i].content.find(keyword) != std::string::npos) {
+                    if (to_lower(notes[i].title).contains(keyword) || to_lower(notes[i].content).contains(keyword) ) {
                         std::cout << "[" << i + 1 << "] " << notes[i].title << "\n    " << notes[i].content << "\n\n";
                         found = true;
                     }
@@ -143,10 +159,6 @@ void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
                   std::cout << "No matching notes found for \"" << keyword << "\".\n\n";
                  }
             }else{
-               if (count == 0) {
-                std::cout << "\nNo notes saved yet.\n\n";
-                break;
-              }
                 std::cout << "\n---All Your Notes Titles---\n";
                     for (int i = 0; i < count; ++i) {
                         print_title(notes, i);
@@ -154,7 +166,6 @@ void input_n_output(int choice, int& count, int& capacity, Note*& notes) {
                     std::cout << "\nEnter the Serial Number of the note to search: ";
                     int note_number {get_valid_int(1, count)};
                     print_note(notes, note_number-1);
-
             }
             break;
         }
