@@ -30,9 +30,27 @@ void test_boundary(){
     assert (  boundary_test.allow_request(3003) );
 }
 
+void test_burst(){
+    RateLimiter burst_test(3, 1000);
+    assert (     burst_test.allow_request(500) );
+    assert (     burst_test.allow_request(500) );
+    assert (     burst_test.allow_request(500) );
+    assert (    !burst_test.allow_request(500) );
+    assert (    !burst_test.allow_request(500) );
+    assert (   !burst_test.allow_request(1500) );
+    assert (   !burst_test.allow_request(1500) );
+    assert (    burst_test.allow_request(1501) );
+    assert (    burst_test.allow_request(1501) );
+    assert (    burst_test.allow_request(1501) );
+    assert (   !burst_test.allow_request(1501) );
+    assert (   !burst_test.allow_request(1501) );
+}
+
 int main(){
     test_trace();
     test_boundary();
+    test_burst();
     std::cout << "Passed\n";
     return 0;
 }
+ 
