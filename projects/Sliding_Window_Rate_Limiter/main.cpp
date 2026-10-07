@@ -16,8 +16,23 @@ void test_trace(){
     assert (!trace_test.allow_request(1500) );
 }
 
+void test_boundary(){
+    RateLimiter boundary_test(1, 1000);
+    assert (     boundary_test.allow_request(0) );
+    assert ( !boundary_test.allow_request(1000) );
+    assert (  boundary_test.allow_request(1001) );
+    assert ( !boundary_test.allow_request(2000) );
+    assert ( !boundary_test.allow_request(2001) );
+    assert (  boundary_test.allow_request(2002) );
+    assert ( !boundary_test.allow_request(3000) );
+    assert ( !boundary_test.allow_request(3001) );
+    assert ( !boundary_test.allow_request(3002) );
+    assert (  boundary_test.allow_request(3003) );
+}
+
 int main(){
     test_trace();
+    test_boundary();
     std::cout << "Passed\n";
     return 0;
 }
