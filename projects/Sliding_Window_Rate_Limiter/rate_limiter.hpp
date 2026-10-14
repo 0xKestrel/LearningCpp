@@ -1,6 +1,7 @@
 #pragma once
 #include <queue>
 #include <utility>
+#include <cstddef>
 
 class RateLimiter
 {
@@ -21,6 +22,11 @@ public:
         }
         else
             return false;
+    }
+
+    std::size_t logged_count() const
+    {
+        return log_.size();
     }
 
 private:

@@ -19,7 +19,7 @@ void test_trace(){
 void test_boundary(){
     RateLimiter boundary_test(1, 1000);
     assert (     boundary_test.allow_request(0) );
-    assert (  !boundary_test.allow_request(990) );
+    assert (  !boundary_test.allow_request(999) );
     assert (  boundary_test.allow_request(1000) );
     assert ( !boundary_test.allow_request(1001) );
     assert ( !boundary_test.allow_request(1999) );
@@ -118,7 +118,7 @@ void test_scale(long long n_requests){
         {
             true_counter++;
         }
-        
+        assert (scale_test.logged_count()<=2u);
     }
     long long expected = ((2 * (n_requests / 1000)) + (std::min(n_requests % 1000, 2ll)));
     assert(true_counter == expected);
