@@ -33,14 +33,18 @@ Small, complete programs — each one picked specifically to force me to learn s
 |---|---|
 | **Calculator** | Basic input validation, `switch` logic, handling arithmetic edge cases (division/modulo by zero, invalid roots). |
 | **Credit_card_validator** | String-to-digit manipulation, the Luhn algorithm, looping over a string from both directions. |
-| **Markdown_Note_Taking_CLI** | A full CLI note-taking app — manual dynamic memory management (`new`/`delete[]`), structs, enums, persistent file storage, case-insensitive search, and validated user input throughout. The most developed project here so far; it has [its own README](projects/Markdown_Note_Taking_CLI/README.md) and [MIT license](projects/Markdown_Note_Taking_CLI/LICENSE). |
+| **Markdown_Note_Taking_CLI** | A full CLI note-taking app — manual dynamic memory management (`new`/`delete[]`), structs, enums, persistent file storage, case-insensitive search, and validated user input throughout. It has [its own README](projects/Markdown_Note_Taking_CLI/README.md) and [MIT license](projects/Markdown_Note_Taking_CLI/LICENSE). |
+| **Sliding_Window_Rate_Limiter** | A sliding-window log rate limiter in C++20. Picking `std::queue` by the operations I needed, amortized O(1) cleanup, a signed/unsigned comparison bug fixed with `std::cmp_less`, and an off-by-one in the window boundary that my own scale test exposed. The first project with a real test suite (hand-traced edge cases plus a million-request run). It has [its own README](projects/Sliding_Window_Rate_Limiter/README.md). |
+| **Matrix_Physics_Engine** *(in progress)* | A from-scratch `Matrix` class (operator overloading, `const` correctness, exceptions), then determinants and Gaussian elimination, then a projectile-motion simulation printed as terminal tables and charts. Built in phases so each one is a finished stopping point. |
 
 ## Where This Is Headed
 
 This is a living repo, not a finished one. A rough sense of what's next:
 
+- Finish `Matrix_Physics_Engine` phase by phase, starting with the `Matrix` class.
 - Keep expanding `Notes/` as I pick up more of the STL with more string algorithms, new classes, and the patterns that repeat across them.
 - Split `Notes/` into topic-based subfolders once there's enough there to warrant it.
-- Keep adding projects that target a specific gap in my understanding, not just projects for the sake of having more projects.
+- Keep adding projects that target a specific gap in my understanding, not just projects for the sake of having more projects. Candidates: an LRU cache (`unordered_map` + `list`), and a v2 of the rate limiter with thread safety and a per-user layer.
+- Newer projects come with their own tests and README, so I can see what I decided and why.
 
 If you've stumbled onto this repo: it's a personal learning log first, a portfolio second. Expect rough edges, half-finished notes, and code that gets noticeably better the further into the repo's history you look that's kind of the point.
