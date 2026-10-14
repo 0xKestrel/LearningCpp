@@ -106,6 +106,21 @@ void test_negative_window(){
     assert (negative_window_test.allow_request(4500) );
 }
 
+void test_scale(long long n_requests){
+    RateLimiter scale_test(2, 1000);
+    long long true_counter{0};
+    for (long long i = 0; i < n_requests; i++)
+    {
+        if (scale_test.allow_request(i))
+        {
+            true_counter++;
+        }
+        
+    }
+    long long expected = ((2 * (n_requests / 1001)) + (std::min(n_requests % 1001, 2ll)));
+    assert(true_counter == expected);
+}
+
 int main(){
     test_trace();
     test_boundary();
@@ -114,6 +129,7 @@ int main(){
     test_negative_max();
     test_zero_window();
     test_negative_window();
+    test_scale(1000000);
     std::cout << "Passed\n";
     return 0;
 }
