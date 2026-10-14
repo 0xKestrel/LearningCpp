@@ -1,6 +1,7 @@
 #include <iostream>
 #include "rate_limiter.hpp"
 #include <cassert>
+#include <algorithm>
 
 void test_trace(){
     RateLimiter trace_test(2, 1000);
@@ -18,15 +19,15 @@ void test_trace(){
 void test_boundary(){
     RateLimiter boundary_test(1, 1000);
     assert (     boundary_test.allow_request(0) );
-    assert ( !boundary_test.allow_request(1000) );
-    assert (  boundary_test.allow_request(1001) );
-    assert ( !boundary_test.allow_request(2000) );
+    assert (  !boundary_test.allow_request(990) );
+    assert (  boundary_test.allow_request(1000) );
+    assert ( !boundary_test.allow_request(1001) );
+    assert ( !boundary_test.allow_request(1999) );
+    assert (  boundary_test.allow_request(2000) );
     assert ( !boundary_test.allow_request(2001) );
-    assert (  boundary_test.allow_request(2002) );
-    assert ( !boundary_test.allow_request(3000) );
+    assert ( !boundary_test.allow_request(2999) );
+    assert (  boundary_test.allow_request(3000) );
     assert ( !boundary_test.allow_request(3001) );
-    assert ( !boundary_test.allow_request(3002) );
-    assert (  boundary_test.allow_request(3003) );
 }
 
 void test_burst(){
@@ -36,11 +37,11 @@ void test_burst(){
     assert (     burst_test.allow_request(500) );
     assert (    !burst_test.allow_request(500) );
     assert (    !burst_test.allow_request(500) );
-    assert (   !burst_test.allow_request(1500) );
-    assert (   !burst_test.allow_request(1500) );
-    assert (    burst_test.allow_request(1501) );
-    assert (    burst_test.allow_request(1501) );
-    assert (    burst_test.allow_request(1501) );
+    assert (    burst_test.allow_request(1500) );
+    assert (    burst_test.allow_request(1500) );
+    assert (    burst_test.allow_request(1500) );
+    assert (   !burst_test.allow_request(1501) );
+    assert (   !burst_test.allow_request(1501) );
     assert (   !burst_test.allow_request(1501) );
     assert (   !burst_test.allow_request(1501) );
 }
@@ -72,17 +73,19 @@ void test_negative_max(){
 void test_zero_window(){
     RateLimiter zero_window_test(1, 0);
     assert (   zero_window_test.allow_request(0) );
+    assert (   zero_window_test.allow_request(0) );
+    assert ( zero_window_test.allow_request(100) );
     assert ( zero_window_test.allow_request(100) );
     assert ( zero_window_test.allow_request(101) );
     assert ( zero_window_test.allow_request(102) );
     assert ( zero_window_test.allow_request(103) );
     assert ( zero_window_test.allow_request(200) );
-    assert (!zero_window_test.allow_request(200) );
+    assert ( zero_window_test.allow_request(200) );
     assert ( zero_window_test.allow_request(201) );
     assert ( zero_window_test.allow_request(500) );
-    assert (!zero_window_test.allow_request(500) );
-    assert (!zero_window_test.allow_request(500) );
-    assert (!zero_window_test.allow_request(500) );
+    assert ( zero_window_test.allow_request(500) );
+    assert ( zero_window_test.allow_request(500) );
+    assert ( zero_window_test.allow_request(500) );
     assert ( zero_window_test.allow_request(501) );
     assert (zero_window_test.allow_request(1650) );
     assert (zero_window_test.allow_request(2950) );
@@ -117,7 +120,7 @@ void test_scale(long long n_requests){
         }
         
     }
-    long long expected = ((2 * (n_requests / 1001)) + (std::min(n_requests % 1001, 2ll)));
+    long long expected = ((2 * (n_requests / 1000)) + (std::min(n_requests % 1000, 2ll)));
     assert(true_counter == expected);
 }
 

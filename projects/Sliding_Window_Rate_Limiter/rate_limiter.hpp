@@ -10,7 +10,7 @@ public:
 
     bool allow_request(long long timestamp_ms)
     {
-        while (!log_.empty() && timestamp_ms - log_.front() > window_size_ms_)
+        while (!log_.empty() && timestamp_ms - log_.front() >= window_size_ms_)
         {
             log_.pop();
         }
